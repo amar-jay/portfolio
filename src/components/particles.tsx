@@ -147,9 +147,9 @@ export default function Particles({
 		return remapped > 0 ? remapped : 0;
 	};
 
-	const animate = (circles: React.RefObject<any[]>) => {
+	const animate = () => {
 		clearContext();
-		circles.current!.forEach((circle: Circle, i: number) => {
+		circles.current.forEach((circle: Circle, i: number) => {
 			// Handle the alpha value
 			const edge = [
 				circle.x + circle.translateX - circle.size, // distance from left edge
@@ -212,13 +212,13 @@ export default function Particles({
 			context.current = canvasRef.current.getContext("2d");
 		}
 		initCanvas();
-		animate(circles);
+		animate();
 		window.addEventListener("resize", initCanvas);
 
 		return () => {
 			window.removeEventListener("resize", initCanvas);
 		};
-	}, [canvasRef.current, initCanvas, circles.current]);
+	}, [canvasRef.current, initCanvas, animate]);
 
 	useEffect(() => {
 		const x = mousePosition.x
@@ -228,7 +228,7 @@ export default function Particles({
 
 	useEffect(() => {
 		initCanvas();
-	}, [refresh]);
+	}, [refresh, initCanvas]);
 
 	return (
 		<div className={className} ref={canvasContainerRef} aria-hidden="true">
