@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useEffect, useCallback} from "react";
-import { MousePosition, useMousePosition } from "@/hooks/mouse";
+import React, { useRef, useEffect} from "react";
+import { useMousePosition } from "@/hooks/mouse";
 
 interface ParticlesProps {
 	className?: string;
@@ -27,14 +27,33 @@ export default function Particles({
 	const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
 	const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1;
 
+	useEffect(() => {
+		if (canvasRef.current) {
+			context.current = canvasRef.current.getContext("2d");
+		}
+		initCanvas();
+		animate();
+		window.addEventListener("resize", initCanvas);
 
-	const initCanvas = useCallback(() => {
-		resizeCanvas();
-		drawParticles();
+		return () => {
+			window.removeEventListener("resize", initCanvas);
+		};
 	}, []);
 
+	useEffect(() => {
+		onMouseMove();
+	}, [mousePosition.x, mousePosition.y]);
 
-	const onMouseMove = (mousePosition: MousePosition) => {
+	useEffect(() => {
+		initCanvas();
+	}, [refresh]);
+
+	const initCanvas = () => {
+		resizeCanvas();
+		drawParticles();
+	};
+
+	const onMouseMove = () => {
 		if (canvasRef.current) {
 			const rect = canvasRef.current.getBoundingClientRect();
 			const { w, h } = canvasSize.current;
@@ -185,7 +204,7 @@ export default function Particles({
 				circle.y > canvasSize.current.h + circle.size
 			) {
 				// remove the circle from the array
-				circles.current!.splice(i, 1);
+				circles.current.splice(i, 1);
 				// create a new circle
 				const newCircle = circleParams();
 				drawCircle(newCircle);
@@ -206,29 +225,6 @@ export default function Particles({
 		});
 		window.requestAnimationFrame(animate);
 	};
-
-	useEffect(() => {
-		if (canvasRef.current) {
-			context.current = canvasRef.current.getContext("2d");
-		}
-		initCanvas();
-		animate();
-		window.addEventListener("resize", initCanvas);
-
-		return () => {
-			window.removeEventListener("resize", initCanvas);
-		};
-	}, [initCanvas, animate]);
-
-	useEffect(() => {
-		const x = mousePosition.x
-		const y = mousePosition.y
-		onMouseMove({x,y});
-	}, [mousePosition.x, mousePosition.y]);
-
-	useEffect(() => {
-		initCanvas();
-	}, [refresh, initCanvas]);
 
 	return (
 		<div className={className} ref={canvasContainerRef} aria-hidden="true">
