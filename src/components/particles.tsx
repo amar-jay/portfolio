@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
-import { useMousePosition } from "@/hooks/mouse";
+import React, { useRef, useEffect} from "react";
+import { MousePosition, useMousePosition } from "@/hooks/mouse";
 
 interface ParticlesProps {
 	className?: string;
@@ -27,33 +27,14 @@ export default function Particles({
 	const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
 	const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1;
 
-	useEffect(() => {
-		if (canvasRef.current) {
-			context.current = canvasRef.current.getContext("2d");
-		}
-		initCanvas();
-		animate();
-		window.addEventListener("resize", initCanvas);
-
-		return () => {
-			window.removeEventListener("resize", initCanvas);
-		};
-	}, []);
-
-	useEffect(() => {
-		onMouseMove();
-	}, [mousePosition.x, mousePosition.y]);
-
-	useEffect(() => {
-		initCanvas();
-	}, [refresh]);
 
 	const initCanvas = () => {
 		resizeCanvas();
 		drawParticles();
 	};
 
-	const onMouseMove = () => {
+
+	const onMouseMove = (mousePosition: MousePosition) => {
 		if (canvasRef.current) {
 			const rect = canvasRef.current.getBoundingClientRect();
 			const { w, h } = canvasSize.current;
@@ -166,9 +147,9 @@ export default function Particles({
 		return remapped > 0 ? remapped : 0;
 	};
 
-	const animate = () => {
+	const animate = (circles: React.RefObject<any[]>) => {
 		clearContext();
-		circles.current.forEach((circle: Circle, i: number) => {
+		circles.current!.forEach((circle: Circle, i: number) => {
 			// Handle the alpha value
 			const edge = [
 				circle.x + circle.translateX - circle.size, // distance from left edge
@@ -204,7 +185,7 @@ export default function Particles({
 				circle.y > canvasSize.current.h + circle.size
 			) {
 				// remove the circle from the array
-				circles.current.splice(i, 1);
+				circles.current!.splice(i, 1);
 				// create a new circle
 				const newCircle = circleParams();
 				drawCircle(newCircle);
@@ -225,6 +206,29 @@ export default function Particles({
 		});
 		window.requestAnimationFrame(animate);
 	};
+
+	useEffect(() => {
+		if (canvasRef.current) {
+			context.current = canvasRef.current.getContext("2d");
+		}
+		initCanvas();
+		animate(circles);
+		window.addEventListener("resize", initCanvas);
+
+		return () => {
+			window.removeEventListener("resize", initCanvas);
+		};
+	}, [canvasRef.current, initCanvas, circles.current]);
+
+	useEffect(() => {
+		const x = mousePosition.x
+		const y = mousePosition.y
+		onMouseMove({x,y});
+	}, [mousePosition.x, mousePosition.y]);
+
+	useEffect(() => {
+		initCanvas();
+	}, [refresh]);
 
 	return (
 		<div className={className} ref={canvasContainerRef} aria-hidden="true">
