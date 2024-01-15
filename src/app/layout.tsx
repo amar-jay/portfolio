@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { Dosis } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './global.css'
 
-const font = Dosis({weight: '400', subsets: ['latin'] })
+const font = Inter({subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'amar jay',
