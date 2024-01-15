@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { McLaren } from 'next/font/google'
+import { Dosis } from 'next/font/google'
 import './global.css'
 
-const font = McLaren({weight: '400', subsets: ['latin'] })
+const font = Dosis({weight: '400', subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'amar jay',

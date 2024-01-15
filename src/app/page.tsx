@@ -46,7 +46,7 @@ export default function Home() {
         <h2 className="text-sm text-zinc-500 ">
         <a href="mailto:abdmananjnr@gmail.com"> 
           abdmananjnr@gmail.com 
-        </a> |
+        </a>{" "}|{" "}
         <a href="https://github.com/amar-jay"> 
           github.com/amar-jay
         </a> 
