@@ -12,6 +12,10 @@ const navigation:Navigation[] = [
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center w-screen h-screen overflow-hidden bg-gradient-to-tl from-black via-slate-800 to-black">
+      <Particles
+        className="absolute inset-0 -z-10 animate-fade-in w-screen h-screen"
+        quantity={100}
+      />
       <nav className="my-16 animate-fade-in">
         <ul className="flex items-center justify-center gap-4">
           {navigation?.map((item, key) => (
@@ -26,10 +30,6 @@ export default function Home() {
         </ul>
       </nav>
       <div className="hidden w-screen h-px animate-glow md:block animate-fade-left bg-gradient-to-r from-zinc-300/0 via-zinc-300/50 to-zinc-300/0" />
-      <Particles
-        className="absolute inset-0 -z-10 animate-fade-in"
-        quantity={100}
-      />
       <h1 className="z-10 text-4xl text-transparent duration-1000 bg-white cursor-default text-edge-outline animate-title font-display sm:text-6xl md:text-9xl whitespace-nowrap bg-clip-text ">
          Amar Jay
       </h1>
@@ -42,11 +42,14 @@ export default function Home() {
       </div>
 
 
-      <div className="my-16 text-center animate-fade-in">
+      <div className="my-16 text-center animate-fade-in-late">
         <h2 className="text-sm text-zinc-500 ">
         <a href="mailto:abdmananjnr@gmail.com"> 
-          abdmananjnr@gmail.com
-        </a>
+          abdmananjnr@gmail.com 
+        </a> |
+        <a href="https://github.com/amar-jay"> 
+          github.com/amar-jay
+        </a> 
         </h2>
       </div>
     </div>
